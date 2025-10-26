@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Usuários</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    th { background: #f2f2f2; }
+    form { margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Lista de Usuários</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome Completo</th>
+        <th>Login</th>
+        <th>Status</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (users.length > 0) { %>
+        <% users.forEach(user => { %>
+          <tr>
+            <td><%= user.id_user %></td>
+            <td><%= user.nome_completo %></td>
+            <td><%= user.login %></td>
+            <% if (user.user_status == 1) { %>
+            <td>Ativo</td>
+            <% } else {%>
+              <td>Inativo</td>
+            <% } %>  
+            <td>
+              <a href="/user/<%= user.id_user %>">
+                <button type="button">Editar</button>
+              </a>
+              <form action="/delete/<%= user.id_user %>" method="post" style="display:inline;">
+                <button type="submit">Excluir</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr><td colspan="5">Nenhum usuário encontrado.</td></tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <h2>Criar novo usuário</h2>
+  <form action="/create" method="post">
+    <input type="text" name="nome_completo" placeholder="Nome completo" required>
+    <input type="text" name="login" placeholder="Login" required>
+    <input type="password" name="senha" placeholder="Senha" required>
+    <select name="user_status" id="user_status" required>
+      <option value="">Selecione o Status</option>
+      <option value="1">Ativo</option>
+      <option value="0">Inativo</option>
+    </select>
+    <button type="submit">Criar</button>
+  </form>
+</body>
+</html>
