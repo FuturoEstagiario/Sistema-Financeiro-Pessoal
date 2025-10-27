@@ -1,4 +1,5 @@
 const db = require('../config/database');
+const bcrypt = require('bcrypt');
 
 const userModels = {
     
@@ -14,15 +15,19 @@ const userModels = {
 
     createUser: async (userData) =>{
         const { id_user, nome_completo, login, senha, user_status } = userData;
+        const saltRound = 10;
+        const senhaHash = await bcrypt.hash(senha, saltRound);
         await db.query('INSERT INTO users (id_user, nome_completo, login, senha, user_status) values (?, ?, ?, ?, ?)',
-        [ id_user, nome_completo, login, senha, user_status ])
+        [ id_user, nome_completo, login, senhaHash, user_status ])
     },
 
     updateUser: async (id_user, userData) =>{
         const { nome_completo, login, senha, user_status } = userData;
         if(senha && senha.length > 0){
+            const saltRound = 10;
+            const senhaHash = await bcrypt.hash(senha, saltRound);
             await db.query('UPDATE users SET nome_completo = ? , login = ? , senha = ? , user_status = ? WHERE id_user = ?',
-            [ nome_completo, login, senha, user_status, id_user])
+            [ nome_completo, login, senhaHash, user_status, id_user])
         } else{
             await db.query('UPDATE users SET nome_completo = ? , login = ? , user_status = ? WHERE id_user = ?',
             [ nome_completo, login, user_status, id_user])

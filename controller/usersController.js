@@ -28,12 +28,35 @@ const userController = {
         }
     },
 
+    registerUser: async(req, res) =>{
+        try{
+            res.render('registerUserView');
+        } catch{
+            console.log('Erro ao carregar a página de registro');
+            res.status(500).send('Erro ao carregar a página de registro');
+        };
+    },
+
+    showLogin: async(req, res) =>{
+        try{
+            res.render('loginView');
+        } catch{
+            console.log('Falha ao carregar a tela de login');
+            console.status(500).send('Falha ao carregar tela de login');
+        }
+    },
+
+    authenticationUser: async(req, res) =>{
+        
+    },
+
 
     createUser: async(req, res) =>{
         try{
             const userData = req.body;
+            userData.user_status =1;
             await userModels.createUser(userData);
-            res.redirect('/users');
+            res.redirect('/login');
         } catch{
             console.error('Erro ao criar usuário');
             res.status(500).send('Erro ao criar usuário');
