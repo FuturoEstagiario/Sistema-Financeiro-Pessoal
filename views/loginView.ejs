@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,11 +11,17 @@
         <input type="password" name="senha" placeholder="Senha" required>
         <button type="submit">Entrar</button>
     </form>
+    <%if(typeof error !== 'undefined' && error) { %>
+        <div style="color:red; margin-top: 10px;">
+            <%= error%>
+        </div>
+    <% } %>    
     <br>
     <h3>Ainda não tem um login? 
         <a href="/register">
             <button>Registrar-se</button>
         </a>
     </h3>
+
 </body>
 </html>

@@ -1,5 +1,6 @@
 const userModels = require('../models/usersModels');
 const express = require('express')
+const bcrypt = require('bcrypt')
 
 const userController = {
 
@@ -31,8 +32,8 @@ const userController = {
     registerUser: async(req, res) =>{
         try{
             res.render('registerUserView');
-        } catch{
-            console.log('Erro ao carregar a página de registro');
+        } catch(error){
+            console.log('Erro ao carregar a página de registro', error);
             res.status(500).send('Erro ao carregar a página de registro');
         };
     },
@@ -40,14 +41,52 @@ const userController = {
     showLogin: async(req, res) =>{
         try{
             res.render('loginView');
-        } catch{
-            console.log('Falha ao carregar a tela de login');
-            console.status(500).send('Falha ao carregar tela de login');
+        } catch(error){
+            console.log('Falha ao carregar a tela de login', error);
+            res.status(500).send('Falha ao carregar tela de login');
         }
     },
 
-    authenticationUser: async(req, res) =>{
-        
+    authenticationLogin: async(req, res) =>{
+        try{
+            const { login, senha } = req.body;
+            const user = await userModels.getLogin(login);
+            if(!user){
+                return res.render('loginView', {error: 'Login não encontrado'});
+            }
+
+            if(user.user_status == 0){
+                return res.render('loginView', {error: 'Usuário Inativo'});
+            }
+
+            const identicalPasswords = await bcrypt.compare(senha, user.senha);
+            if(identicalPasswords){
+                req.session.user = {
+                    id: user.id_user,
+                    nome: user.nome_completo,
+                    login: user.login
+                };
+
+                res.redirect('/users');
+            } else{
+                return res.render('loginView', {error: 'Senha incorreta'});
+            }
+        } catch(error){
+            console.error('Falha na autenticação', error);
+            res.status(500).send('Erro no servidor durante o login');
+        }
+    },
+
+    logoutUser: (req, res) => {
+        req.session.destroy((err) => {
+            if(err){
+                console.log('Erro ao fazer logout', err);
+                res.redirect('/users');
+            };
+            //connectid.sid que significa Connect Session ID, nome padrão do cookie que a biblioteca express-session usa para rastrear as sessões no navegador do usuário
+            res.clearCookie('connect.sid') 
+            res.redirect('/login')
+        }) 
     },
 
 
@@ -57,8 +96,8 @@ const userController = {
             userData.user_status =1;
             await userModels.createUser(userData);
             res.redirect('/login');
-        } catch{
-            console.error('Erro ao criar usuário');
+        } catch(error){
+            console.error('Erro ao criar usuário', error);
             res.status(500).send('Erro ao criar usuário');
         }
     },
@@ -70,7 +109,7 @@ const userController = {
             const user = await userModels.updateUser(id_user, userData);
             res.redirect('/users');
         } catch(error) {
-            console.error('Erro ao atualizar usuário');
+            console.error('Erro ao atualizar usuário', error);
             res.status(500).send('Erro ao atualizar usuário');
         }
     },
@@ -81,7 +120,7 @@ const userController = {
             await userModels.deleteUser(id_user);
             res.redirect('/users');
         } catch(error){
-            console.error('Erro ao deletar usuário');
+            console.error('Erro ao deletar usuário', error);
             res.status(500).send('Erro ao deletar usuário')
         }
     }

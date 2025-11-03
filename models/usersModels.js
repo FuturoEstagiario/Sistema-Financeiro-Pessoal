@@ -13,6 +13,11 @@ const userModels = {
         return rows[0];
     },
 
+    getLogin: async(login) =>{
+        const [ rows ] = await db.query('SELECT * FROM users WHERE login = ?', [ login ])
+        return rows[0];
+    },
+
     createUser: async (userData) =>{
         const { id_user, nome_completo, login, senha, user_status } = userData;
         const saltRound = 10;

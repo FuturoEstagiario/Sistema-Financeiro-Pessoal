@@ -7,10 +7,10 @@ const session = require('express-session')
 const app = express();
 
 app.use(session({
-    secret: 'batataDoceSoServeParaGanharMassa', // Troque isso por uma string aleatória
+    secret: 'batataDoceSoServeParaGanharMassa',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false } // Em produção (com HTTPS) use 'true'
+    cookie: { secure: false } 
 }));
 
 app.use(express.urlencoded({ extended: true }));
