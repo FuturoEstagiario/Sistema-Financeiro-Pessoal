@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar-Usuario</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        form { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Editar conta</h1>
+
+    <form action="/accounts/update" method="post">
+        <input type="text" name="nome" placeholder="Nome da conta" value="<%= account.nome %>" required>
+        <label for="tipo">Tipo de conta</label>
+        <select name="tipo" id="tipo" required>
+            <option value="Conta Corrente" <%= account.tipo === 'Conta Corrente' ? 'selected' : '' %>>Conta Corrente</option>
+            <option value="Conta Salário" <%= account.tipo === 'Conta Salário' ? 'selected' : '' %>>Conta Salário</option>
+            <option value="Conta Poupança" <%= account.tipo === 'Conta Poupança' ? 'selected' : '' %>>Conta Poupança</option>
+        </select>
+        <input type="number" name="saldo_inicial" placeholder="Saldo" value="<%= account.saldo_inicial %>" required>
+        <button type="submit">Atualizar</button>
+    </form>
+    <br>
+    <a href="/accounts"><button type="button">Cancelar</button>
+    </a>
+</body>
+</html>

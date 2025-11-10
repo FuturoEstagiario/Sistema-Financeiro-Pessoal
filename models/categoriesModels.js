@@ -1,2 +1,1 @@
-const mysql = require('myslq2');
-
+const db = require('../config/database');

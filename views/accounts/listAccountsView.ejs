@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Contas</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    th { background: #f2f2f2; }
+    form { margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Lista de Contas</h1>
+
+  <a href="/accounts/create">
+    <button type="button">Adicionar Nova Conta</button>
+  </a>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nome da Conta</th>
+        <th>Tipo</th>
+        <th>Saldo Inicial</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (accounts.length > 0) { %>
+
+        <% accounts.forEach(conta => { %>
+          <tr>
+            <td><%= conta.nome %></td>
+            <td><%= conta.tipo %></td>
+            <td><%= conta.saldo_inicial %></td>
+            <td>
+              <a href="/accounts/update/<%= conta.id_conta %>">
+                <button type="button">Editar</button>
+              </a>
+
+              <form action="/accounts/delete/<%= conta.id_conta %>" method="post" style="display:inline;">
+                <button type="submit">Excluir</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+
+      <% } else { %>
+        <tr><td colspan="5">Nenhuma conta encontrada.</td></tr>
+      <% } %>
+    </tbody>
+  </table>
+</body>
+</html>

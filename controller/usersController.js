@@ -1,13 +1,13 @@
 const userModels = require('../models/usersModels');
-const express = require('express')
-const bcrypt = require('bcrypt')
+const express = require('express');
+const bcrypt = require('bcrypt');
 
 const userController = {
 
     listUsers: async (req, res) =>{
         try{
             const users = await userModels.getData();
-            res.render('usersView', { users });   
+            res.render('user/usersView', { users });   
         } catch(error){
             console.error('Erro ao listar os usuários', error);
             res.status(500).send('Erro ao listar usuários');
@@ -22,7 +22,7 @@ const userController = {
             if(!user){
                 res.status(404).send("Usuário não encontrado");
             }
-            res.render('editUserView', { user });
+            res.render('user/editUserView', { user });
         } catch(error){
             console.error('Erro ao encontrar o usuário', error);
             res.status(500).send('Erro ao encontrar o usuário');
@@ -31,7 +31,7 @@ const userController = {
 
     registerUser: async(req, res) =>{
         try{
-            res.render('registerUserView');
+            res.render('user/registerUserView');
         } catch(error){
             console.log('Erro ao carregar a página de registro', error);
             res.status(500).send('Erro ao carregar a página de registro');
@@ -40,7 +40,7 @@ const userController = {
 
     showLogin: async(req, res) =>{
         try{
-            res.render('loginView');
+            res.render('user/loginView');
         } catch(error){
             console.log('Falha ao carregar a tela de login', error);
             res.status(500).send('Falha ao carregar tela de login');
@@ -52,11 +52,11 @@ const userController = {
             const { login, senha } = req.body;
             const user = await userModels.getLogin(login);
             if(!user){
-                return res.render('loginView', {error: 'Login não encontrado'});
+                return res.render('user/loginView', {error: 'Login não encontrado'});
             }
 
             if(user.user_status == 0){
-                return res.render('loginView', {error: 'Usuário Inativo'});
+                return res.render('user/loginView', {error: 'Usuário Inativo'});
             }
 
             const identicalPasswords = await bcrypt.compare(senha, user.senha);
@@ -69,7 +69,7 @@ const userController = {
 
                 res.redirect('/users');
             } else{
-                return res.render('loginView', {error: 'Senha incorreta'});
+                return res.render('user/loginView', {error: 'Senha incorreta'});
             }
         } catch(error){
             console.error('Falha na autenticação', error);
