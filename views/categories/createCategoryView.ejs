@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Categoria</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="top-actions" style="justify-content: flex-end;">
+            <a href="/dashboard" class="btn btn-secondary">Voltar ao Painel</a>
+        </div>
+
+        <h1>Criar Nova Categoria</h1>
+        
+        <form action="/categories/create" method="POST" class="form-create">
+            
+            <div>
+                <label for="nome_categoria">Nome da Categoria</label>
+                <input type="text" id="nome_categoria" name="nome_categoria" placeholder="Ex: Mercado, Netflix, iFood" required>
+            </div>
+            
+            <div>
+                <label for="id_grupo_fk">Grupo (Tipo)</label>
+                <select id="id_grupo_fk" name="id_grupo_fk" required>
+                    <option value="">-- Selecione um grupo --</option>
+                    <% groups.forEach(group => { %>
+                        <option value="<%= group.id_grupo %>">
+                            <%= group.nome_grupo %> (<%= group.tipo_grupo %>)
+                        </option>
+                    <% }) %>
+                </select>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success">Salvar Categoria</button>
+                <a href="/categories" class="btn btn-secondary" style="text-align: center;">Cancelar</a>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>

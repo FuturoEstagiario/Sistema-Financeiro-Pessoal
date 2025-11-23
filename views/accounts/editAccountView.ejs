@@ -3,28 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar-Usuario</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; }
-        form { margin-top: 20px; }
-    </style>
+    <title>Editar Conta</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <h1>Editar conta</h1>
 
-    <form action="/accounts/update" method="post">
-        <input type="text" name="nome" placeholder="Nome da conta" value="<%= account.nome %>" required>
-        <label for="tipo">Tipo de conta</label>
-        <select name="tipo" id="tipo" required>
-            <option value="Conta Corrente" <%= account.tipo === 'Conta Corrente' ? 'selected' : '' %>>Conta Corrente</option>
-            <option value="Conta Salário" <%= account.tipo === 'Conta Salário' ? 'selected' : '' %>>Conta Salário</option>
-            <option value="Conta Poupança" <%= account.tipo === 'Conta Poupança' ? 'selected' : '' %>>Conta Poupança</option>
-        </select>
-        <input type="number" name="saldo_inicial" placeholder="Saldo" value="<%= account.saldo_inicial %>" required>
-        <button type="submit">Atualizar</button>
-    </form>
-    <br>
-    <a href="/accounts"><button type="button">Cancelar</button>
-    </a>
+    <div class="container">
+        <div class="top-actions" style="justify-content: flex-end;">
+            <a href="/dashboard" class="btn btn-secondary">Voltar ao Painel</a>
+        </div>
+
+        <h1>Editar Conta</h1>
+
+        <form action="/accounts/update/<%= account.id_conta %>" method="post" class="form-create">
+            
+            <div>
+                <label for="nome">Nome da conta</label>
+                <input type="text" name="nome" id="nome" value="<%= account.nome %>" required>
+            </div>
+            
+            <div>
+                <label for="tipo">Tipo de conta</label>
+                <select name="tipo" id="tipo" required>
+                    <option value="Conta Corrente" <%= account.tipo === 'Conta Corrente' ? 'selected' : '' %>>Conta Corrente</option>
+                    <option value="Conta Salário" <%= account.tipo === 'Conta Salário' ? 'selected' : '' %>>Conta Salário</option>
+                    <option value="Conta Poupança" <%= account.tipo === 'Conta Poupança' ? 'selected' : '' %>>Conta Poupança</option>
+                    <option value="Carteira" <%= account.tipo === 'Carteira' ? 'selected' : '' %>>Carteira</option>
+                    <option value="Investimento" <%= account.tipo === 'Investimento' ? 'selected' : '' %>>Investimento</option>
+                    <option value="Outro" <%= account.tipo === 'Outro' ? 'selected' : '' %>>Outro</option>
+                </select>
+            </div>
+            
+            <div>
+                <label for="saldo_inicial">Saldo</label>
+                <input type="number" name="saldo_inicial" id="saldo_inicial" step="0.01" value="<%= account.saldo_inicial %>" required>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Atualizar</button>
+                <a href="/accounts" class="btn btn-secondary" style="text-align: center;">Cancelar</a>
+            </div>
+        </form>
+    </div>
+
 </body>
 </html>

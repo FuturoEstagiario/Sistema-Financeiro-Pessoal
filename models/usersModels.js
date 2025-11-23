@@ -41,6 +41,10 @@ const userModels = {
 
     deleteUser: async(id) =>{
         await db.query('DELETE FROM users WHERE id_user = ?', [ id ])
+    },
+    
+    changeStatus: async (id_user, status) => {
+        await db.query('UPDATE users SET user_status = ? WHERE id_user = ?', [status, id_user]);
     }
 }
 

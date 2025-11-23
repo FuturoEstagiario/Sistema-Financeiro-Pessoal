@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Transação</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="top-actions" style="justify-content: flex-end;">
+            <a href="/dashboard" class="btn btn-secondary">Voltar ao Painel</a>
+        </div>
+
+        <h1>Editar Lançamento</h1>
+        
+        <form action="/transactions/update/<%= transaction.id_transacao %>" method="POST" enctype="multipart/form-data" class="form-create">
+            
+            <div>
+                <label for="descricao">Descrição</label>
+                <input type="text" id="descricao" name="descricao" value="<%= transaction.descricao %>" required>
+            </div>
+
+            <div>
+                <label for="valor">Valor (R$)</label>
+                <input type="number" id="valor" name="valor" step="0.01" value="<%= transaction.valor %>" required>
+            </div>
+
+            <div>
+                <label for="data">Data</label>
+                <input type="date" id="data" name="data" value="<%= transaction.formattedDate %>" required>
+            </div>
+
+            <div>
+                <label for="id_conta_fk">Conta</label>
+                <select id="id_conta_fk" name="id_conta_fk" required>
+                    <% accounts.forEach(account => { %>
+                        <option 
+                            value="<%= account.id_conta %>"
+                            <%= (transaction.id_conta_fk == account.id_conta) ? 'selected' : '' %>
+                        >
+                            <%= account.nome %>
+                        </option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <div>
+                <label for="id_categoria_fk">Categoria</label>
+                <select id="id_categoria_fk" name="id_categoria_fk" required>
+                    <% categories.forEach(category => { %>
+                        <option 
+                            value="<%= category.id_categoria %>"
+                            <%= (transaction.id_categoria_fk == category.id_categoria) ? 'selected' : '' %>
+                        >
+                            <%= category.nome_categoria %>
+                        </option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <div>
+                <label for="comprovante">Alterar Comprovante (Opcional)</label>
+                <input type="file" id="comprovante" name="comprovante" style="padding: 5px; background-color: #fff;">
+                
+                <% if (transaction.comprovante_path) { %>
+                    <div style="margin-top: 10px; padding: 10px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 4px;">
+                        <small>Arquivo atual:</small><br>
+                        <a href="/uploads/<%= transaction.comprovante_path %>" target="_blank" style="color: #3498db; font-weight: bold; text-decoration: none;">
+                            📄 Visualizar Comprovante Salvo
+                        </a>
+                    </div>
+                <% } %>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Atualizar Lançamento</button>
+                <a href="/transactions" class="btn btn-secondary" style="text-align: center;">Cancelar</a>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>

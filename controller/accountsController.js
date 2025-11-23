@@ -43,7 +43,6 @@ const accountsController = {
             if(!account){
                 return res.redirect('/accounts');
             };
-            console.log(account);
             res.render('accounts/editAccountView', { account });
             
         } catch(error) {

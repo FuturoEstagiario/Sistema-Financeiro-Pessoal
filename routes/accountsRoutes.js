@@ -10,12 +10,14 @@ const isAuthenticate = (req, res, next) =>{
     res.redirect('/login');
 };
 
-router.get('/accounts', isAuthenticate, accountsController.listAccounts);
-router.get('/accounts/create', isAuthenticate, accountsController.showCreateAccount);
-router.post('/accounts/create', isAuthenticate, accountsController.createAccount);
-router.get('/accounts/update/:id', isAuthenticate, accountsController.showUpdateAccount);
-router.post('/accounts/update/:id', isAuthenticate, accountsController.updateAccount);
-router.post('/accounts/delete/:id', isAuthenticate, accountsController.deleteAccount);
+router.use(isAuthenticate);
+
+router.get('/accounts', accountsController.listAccounts);
+router.get('/accounts/create', accountsController.showCreateAccount);
+router.post('/accounts/create', accountsController.createAccount);
+router.get('/accounts/update/:id', accountsController.showUpdateAccount);
+router.post('/accounts/update/:id', accountsController.updateAccount);
+router.post('/accounts/delete/:id', accountsController.deleteAccount);
 
 
 module.exports = router;

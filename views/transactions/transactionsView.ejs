@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Transações</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Minhas Transações</h1>
+        
+        <div class="top-actions">
+            <a href="/transactions/create" class="btn btn-primary">+ Novo Lançamento</a>
+            <a href="/dashboard" class="btn btn-secondary">Voltar ao Painel</a>
+        </div>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                        <th>Tipo</th>
+                        <th>Categoria</th>
+                        <th>Conta</th>
+                        <th class="text-center">Comprovante</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (transactions.length > 0) { %>
+                        <% transactions.forEach(t => { %>
+                            
+                            <% 
+                                let sinal = '-';
+                                let classeCor = 'text-red'; // Usa classe agora
+                                if (t.tipo_grupo && t.tipo_grupo.toLowerCase() === 'receita') {
+                                    sinal = '+';
+                                    classeCor = 'text-green'; // Usa classe agora
+                                }
+                            %>
+
+                            <tr>
+                                <td><%= new Date(t.data).toLocaleDateString('pt-BR', {timeZone: 'UTC'}) %></td>
+                                <td><%= t.descricao %></td>
+                                
+                                <td class="<%= classeCor %>">
+                                    <%= sinal %> R$ <%= parseFloat(t.valor).toFixed(2).replace('.', ',') %>
+                                </td>
+                                
+                                <td><%= t.tipo_grupo %></td>
+                                <td><%= t.nome_categoria %></td>
+                                <td><%= t.conta_nome %></td>
+                                
+                                <td class="text-center">
+                                    <% if (t.comprovante_path) { %>
+                                        <a href="/uploads/<%= t.comprovante_path %>" target="_blank" class="text-blue">Ver</a>
+                                    <% } else { %>
+                                        <span class="text-muted">-</span>
+                                    <% } %>
+                                </td>
+                                
+                                <td>
+                                    <div class="actions-cell">
+                                        <a href="/transactions/edit/<%= t.id_transacao %>" class="btn btn-table-edit">Editar</a>
+                                        
+                                        <form action="/transactions/delete/<%= t.id_transacao %>" method="POST" class="inline" onsubmit="return confirm('Tem certeza?');">
+                                            <button type="submit" class="btn btn-table-delete">Excluir</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="8" class="text-center text-muted" style="padding: 20px;">Nenhuma transação encontrada.</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Financeiro</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <%
+        let saldoAtual = parseFloat(totalBalance || 0);
+        let recMes = parseFloat(monthSummary.Receita || 0);
+        let despMes = parseFloat(monthSummary.Despesa || 0);
+        
+        // Define as classes de cor baseadas no valor
+        let classeSaldo = saldoAtual >= 0 ? 'text-green' : 'text-red';
+    %>
+
+    <div class="container">
+        <h1>Painel Financeiro</h1>
+        <p class="text-center text-muted">Bem-vindo(a), <strong><%= user.nome %></strong></p>
+
+        <div class="dashboard-cards">
+            <div class="card">
+                <h2>Saldo Total</h2>
+                <div class="big-number <%= classeSaldo %>">
+                    R$ <%= saldoAtual.toFixed(2).replace('.', ',') %>
+                </div>
+                <small>Acumulado de todas as contas</small>
+            </div>
+
+            <div class="card">
+                <h2>Resumo do Mês</h2>
+                <p class="mb-10">
+                    Receitas: <strong class="text-green">R$ <%= recMes.toFixed(2).replace('.', ',') %></strong>
+                </p>
+                <p class="mb-10">
+                    Despesas: <strong class="text-red">R$ <%= despMes.toFixed(2).replace('.', ',') %></strong>
+                </p>
+            </div>
+        </div>
+
+        <h3 class="text-muted" style="border-bottom: 1px solid #eee; padding-bottom: 10px;">Menu Rápido</h3>
+        <div class="menu-grid">
+            <a href="/transactions"><button type="button" class="btn btn-primary">Transações</button></a>
+            <a href="/categories"><button type="button" class="btn btn-secondary">Categorias</button></a>
+            <a href="/accounts"><button type="button" class="btn btn-secondary">Contas</button></a>
+            <a href="/profile"><button type="button" class="btn btn-warning">Meu Perfil</button></a>
+            <a href="/dashboard/download"><button type="button" class="btn btn-success">Baixar Relatório</button></a>
+        </div>
+
+        <h3 class="text-muted" style="border-bottom: 1px solid #eee; padding-bottom: 10px;">Top Gastos por Grupo</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Grupo</th>
+                    <th>Total Gasto</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (expensesByGroup.length > 0) { %>
+                    <% expensesByGroup.forEach(grupo => { %>
+                        <tr>
+                            <td><%= grupo.nome_grupo %></td>
+                            <td class="text-muted" style="font-weight: bold;">
+                                R$ <%= parseFloat(grupo.total).toFixed(2).replace('.', ',') %>
+                            </td>
+                        </tr>
+                    <% }) %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="2" class="text-center text-muted">Nenhum gasto registrado.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+
+        <div class="text-center mt-30">
+            <form action="/logout" method="POST">
+                <button type="submit" class="btn btn-danger w-auto">Sair do Sistema</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

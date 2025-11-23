@@ -3,27 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar-Usuario</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; }
-        form { margin-top: 20px; }
-    </style>
+    <title>Meu Perfil</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <h1>Editar usuário</h1>
 
-    <form action="/update/<%= user.id_user %>" method="post">
-        <input type="text" name="nome_completo" placeholder="Nome completo do usuário" value="<%= user.nome_completo %>" required>
-        <input type="text" name="login" placeholder="Login do usuário" value="<%= user.login %>" required>
-        <input type="password" name="senha" placeholder="Senha(não é necessário alterar)">
-        <select name="user_status" id="user_status" required>
-            <option value="1" <%= user.user_status == 1 ? 'selected' : '' %>>Ativo</option>
-            <option value="0" <%= user.user_status == 0 ? 'selected' : '' %>>Inativo</option>
-        </select>
-        <button type="submit">Atualizar</button>
-    </form>
-    <br>
-    <a href="/users"><button type="button">Cancelar</button>
-    </a>
+    <div class="container">
+        <div class="top-actions" style="justify-content: flex-end;">
+            <a href="/dashboard" class="btn btn-secondary">Voltar ao Painel</a>
+        </div>
+
+        <h1>Meu Perfil</h1>
+
+        <form action="/profile/update" method="post" class="form-create">
+            <div>
+                <label for="nome_completo">Nome Completo</label>
+                <input type="text" name="nome_completo" id="nome_completo" value="<%= user.nome_completo %>" required>
+            </div>
+
+            <div>
+                <label for="login">Login</label>
+                <input type="text" name="login" id="login" value="<%= user.login %>" required>
+            </div>
+
+            <div>
+                <label for="senha">Senha (Deixe em branco para manter)</label>
+                <input type="password" name="senha" id="senha" placeholder="Nova senha">
+            </div>
+
+            <input type="hidden" name="user_status" value="1">
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                <a href="/dashboard" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+
+        <div class="danger-zone">
+            <h3 class="danger-title">Zona de Perigo</h3>
+            <p class="text-muted mb-20" style="font-size: 14px;">
+                Ao desativar sua conta, você será desconectado imediatamente.
+            </p>
+            
+            <form action="/profile/delete" method="POST" onsubmit="return confirm('Tem certeza absoluta?');">
+                <button type="submit" class="btn btn-danger w-auto">
+                    Desativar minha conta
+                </button>
+            </form>
+        </div>
+
+    </div>
+
 </body>
 </html>

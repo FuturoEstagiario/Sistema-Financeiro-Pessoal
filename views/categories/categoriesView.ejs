@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Categorias</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Minhas Categorias</h1>
+        
+        <div class="top-actions">
+            <a href="/categories/create" class="btn btn-primary">
+                + Nova Categoria
+            </a>
+            <a href="/dashboard" class="btn btn-secondary">
+                Voltar ao Painel
+            </a>
+        </div>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome da Categoria</th>
+                        <th>Grupo</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (categories.length > 0) { %>
+                        <% categories.forEach(category => { %>
+                            <tr>
+                                <td><strong><%= category.nome_categoria %></strong></td>
+                                <td><%= category.nome_grupo %></td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <a href="/categories/edit/<%= category.id_categoria %>" class="btn btn-table-edit">
+                                            Editar
+                                        </a>
+                                        
+                                        <form action="/categories/delete/<%= category.id_categoria %>" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir esta categoria?');">
+                                            <button type="submit" class="btn btn-table-delete">Excluir</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="3" style="text-align: center; padding: 20px; color: #777;">
+                                Nenhuma categoria encontrada.
+                            </td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,33 +1,7 @@
 const userModels = require('../models/usersModels');
-const express = require('express');
 const bcrypt = require('bcrypt');
 
 const userController = {
-
-    listUsers: async (req, res) =>{
-        try{
-            const users = await userModels.getData();
-            res.render('user/usersView', { users });   
-        } catch(error){
-            console.error('Erro ao listar os usuários', error);
-            res.status(500).send('Erro ao listar usuários');
-        }
-    },
-
-
-    userId: async (req, res)=>{
-        try{
-            const id_user = req.params.id;
-            const user = await userModels.getUserId(id_user);
-            if(!user){
-                res.status(404).send("Usuário não encontrado");
-            }
-            res.render('user/editUserView', { user });
-        } catch(error){
-            console.error('Erro ao encontrar o usuário', error);
-            res.status(500).send('Erro ao encontrar o usuário');
-        }
-    },
 
     registerUser: async(req, res) =>{
         try{
@@ -49,31 +23,70 @@ const userController = {
 
     authenticationLogin: async(req, res) =>{
         try{
-            const { login, senha } = req.body;
+            const { login, senha, remember } = req.body;
             const user = await userModels.getLogin(login);
+            
             if(!user){
-                return res.render('user/loginView', {error: 'Login não encontrado'});
+                return res.render('user/loginView', {error: 'Login not found'});
             }
 
             if(user.user_status == 0){
-                return res.render('user/loginView', {error: 'Usuário Inativo'});
+                return res.render('user/reactivateView', { user });
             }
 
             const identicalPasswords = await bcrypt.compare(senha, user.senha);
-            if(identicalPasswords){
+            
+            if(identicalPasswords){       
+                if (remember) {
+                    req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000; 
+                } else {
+                    req.session.cookie.expires = false; 
+                }
+
                 req.session.user = {
                     id: user.id_user,
                     nome: user.nome_completo,
                     login: user.login
                 };
-
-                res.redirect('/users');
+                res.redirect('/dashboard');
             } else{
-                return res.render('user/loginView', {error: 'Senha incorreta'});
+                return res.render('user/loginView', {error: 'Incorrect password'});
             }
         } catch(error){
-            console.error('Falha na autenticação', error);
-            res.status(500).send('Erro no servidor durante o login');
+            console.error('Authentication failed', error);
+            res.status(500).send('Server error during login');
+        }
+    },
+
+    reactivateUser: async (req, res) => {
+        try {
+            const { id_user, nome_completo, login } = req.body;          
+            await userModels.changeStatus(id_user, 1);
+            req.session.user = {
+                id: id_user,
+                nome: nome_completo,
+                login: login
+            };
+
+            res.redirect('/dashboard');
+
+        } catch (error) {
+            console.error('Error reactivating user', error);
+            res.status(500).send('Error reactivating user');
+        }
+    },
+
+    deleteMyProfile: async (req, res) => {
+        try {
+            const id_user = req.session.user.id;    
+            await userModels.changeStatus(id_user, 0);         
+            req.session.destroy();
+            res.clearCookie('connect.sid');
+            res.redirect('/login');
+            
+        } catch (error) {
+            console.error('Error deactivating account', error);
+            res.status(500).send('Error deactivating account');
         }
     },
 
@@ -81,19 +94,17 @@ const userController = {
         req.session.destroy((err) => {
             if(err){
                 console.log('Erro ao fazer logout', err);
-                res.redirect('/users');
+                return res.redirect('/dashboard');
             };
-            //connectid.sid que significa Connect Session ID, nome padrão do cookie que a biblioteca express-session usa para rastrear as sessões no navegador do usuário
             res.clearCookie('connect.sid') 
-            res.redirect('/login')
+            res.redirect('/')
         }) 
     },
-
 
     createUser: async(req, res) =>{
         try{
             const userData = req.body;
-            userData.user_status =1;
+            userData.user_status = 1;
             await userModels.createUser(userData);
             res.redirect('/login');
         } catch(error){
@@ -102,31 +113,38 @@ const userController = {
         }
     },
 
-    updateUser: async(req, res) =>{
+    showMyProfile: async (req, res) => {
         try{
-            const id_user = req.params.id;
-            const userData = req.body;
-            const user = await userModels.updateUser(id_user, userData);
-            res.redirect('/users');
-        } catch(error) {
-            console.error('Erro ao atualizar usuário', error);
-            res.status(500).send('Erro ao atualizar usuário');
+            const id_user = req.session.user.id;
+            const user = await userModels.getUserId(id_user);
+            
+            if(!user){
+                return res.redirect('/login');
+            }
+            
+            res.render('user/editUserView', { user });
+        } catch(error){
+            console.error('Erro ao encontrar o usuário', error);
+            res.status(500).send('Erro ao encontrar o usuário');
         }
     },
 
-    deleteUser: async(req, res) =>{
+    updateMyProfile: async(req, res) =>{
         try{
-            const id_user = req.params.id;
-            await userModels.deleteUser(id_user);
-            res.redirect('/users');
-        } catch(error){
-            console.error('Erro ao deletar usuário', error);
-            res.status(500).send('Erro ao deletar usuário')
+            const id_user = req.session.user.id;
+            const userData = req.body;
+            
+            await userModels.updateUser(id_user, userData);
+            
+            req.session.user.nome = userData.nome_completo;
+            req.session.user.login = userData.login;
+
+            res.redirect('/dashboard');
+        } catch(error) {
+            console.error('Erro ao atualizar perfil', error);
+            res.status(500).send('Erro ao atualizar perfil');
         }
     }
 }
 
 module.exports = userController;
-
-
-

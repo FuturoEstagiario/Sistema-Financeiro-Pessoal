@@ -4,24 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <form action="/login" method="post">
-        <input type="text" name="login" id="login" placeholder="Login" required>
-        <input type="password" name="senha" placeholder="Senha" required>
-        <button type="submit">Entrar</button>
-    </form>
-    <%if(typeof error !== 'undefined' && error) { %>
-        <div style="color:red; margin-top: 10px;">
-            <%= error%>
+
+    <div class="container-small">
+        <h1>Entrar no Sistema</h1>
+
+        <form action="/login" method="post">
+            <div>
+                <label for="login">Login</label>
+                <input type="text" name="login" id="login" placeholder="Digite seu usuário" required>
+            </div>
+
+            <div>
+                <label for="senha">Senha</label>
+                <input type="password" name="senha" id="senha" placeholder="Digite sua senha" required>
+            </div>
+
+            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                <input type="checkbox" name="remember" id="remember" style="width: auto; margin-right: 10px; margin-bottom: 0;">
+                <label for="remember" style="margin: 0; font-weight: normal; cursor: pointer;">Lembrar minha senha</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Entrar</button>
+        </form>
+
+        <% if(typeof error !== 'undefined' && error) { %>
+            <div style="color: #c0392b; margin-top: 15px; text-align: center; font-weight: bold;">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <div class="login-footer">
+            Ainda não tem uma conta? <br>
+            <a href="/register" style="color: #3498db; font-weight: bold;">Cadastre-se aqui</a>
         </div>
-    <% } %>    
-    <br>
-    <h3>Ainda não tem um login? 
-        <a href="/register">
-            <button>Registrar-se</button>
-        </a>
-    </h3>
+    </div>
 
 </body>
 </html>
