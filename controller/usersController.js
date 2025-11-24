@@ -27,7 +27,7 @@ const userController = {
             const user = await userModels.getLogin(login);
             
             if(!user){
-                return res.render('user/loginView', {error: 'Login not found'});
+                return res.render('user/loginView', {error: 'Login não encontrado'});
             }
 
             if(user.user_status == 0){
@@ -50,11 +50,11 @@ const userController = {
                 };
                 res.redirect('/dashboard');
             } else{
-                return res.render('user/loginView', {error: 'Incorrect password'});
+                return res.render('user/loginView', {error: 'Senha incorreta'});
             }
         } catch(error){
-            console.error('Authentication failed', error);
-            res.status(500).send('Server error during login');
+            console.error('Autenticação falhou', error);
+            res.status(500).send('Erro durante o login');
         }
     },
 
@@ -71,8 +71,8 @@ const userController = {
             res.redirect('/dashboard');
 
         } catch (error) {
-            console.error('Error reactivating user', error);
-            res.status(500).send('Error reactivating user');
+            console.error('Erro ao reativar o usuário', error);
+            res.status(500).send('Erro ao reativar o usuário');
         }
     },
 
@@ -85,8 +85,8 @@ const userController = {
             res.redirect('/login');
             
         } catch (error) {
-            console.error('Error deactivating account', error);
-            res.status(500).send('Error deactivating account');
+            console.error('Erro ao desativar usuário', error);
+            res.status(500).send('Erro ao desativar usuário');
         }
     },
 
