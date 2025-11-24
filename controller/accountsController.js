@@ -9,7 +9,7 @@ const accountsController = {
             res.render('accounts/listAccountsView', { accounts });   
         } catch(error){
             console.error('Erro ao listar as contas', error);
-            res.status(500).send('Erro ao listar contas');
+            res.status(500).send('Erro ao listar contas')
         }
     },
 
