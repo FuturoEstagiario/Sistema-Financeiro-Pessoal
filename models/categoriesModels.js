@@ -3,7 +3,7 @@ const db = require('../config/database');
 const categoriesModels = {
 
     getCategoryGroups: async () => {
-        // CORRIGIDO AQUI
+
         const [rows] = await db.query('SELECT * FROM categorias_grupo ORDER BY nome_grupo');
         return rows;
     },

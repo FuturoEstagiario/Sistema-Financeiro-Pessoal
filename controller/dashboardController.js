@@ -15,9 +15,9 @@ const dashboardController = {
 
             res.render('dashboard/dashboardView', { 
                 user: req.session.user,
-                totalBalance,     // Changed from totalSaldo
-                monthSummary,     // Changed from resumoMes
-                expensesByGroup   // Changed from gastosPorGrupo
+                totalBalance,   
+                monthSummary,     
+                expensesByGroup   
             });
 
         } catch (error) {
@@ -31,7 +31,6 @@ const dashboardController = {
             const userId = req.session.user.id;
             const transactions = await transactionsModels.getTransactionsByUser(userId);
 
-            // CSV Header (You can keep in PT or change to EN)
             let csv = 'Data;Descricao;Valor;Tipo;Categoria;Conta\n';
 
             transactions.forEach(t => {

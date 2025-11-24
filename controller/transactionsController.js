@@ -66,8 +66,6 @@ const transactionsController = {
                 return res.redirect('/transactions');
             }
 
-            // Formata a data para o input type="date" (YYYY-MM-DD)
-            // O input date precisa desse formato exato
             const dateObj = new Date(transaction.data);
             transaction.formattedDate = dateObj.toISOString().split('T')[0];
 
